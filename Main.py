@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-import math
 import pickle
 
 import pr_utility as pru
@@ -8,7 +6,7 @@ import pr_utility as pru
 path = 'sourceimages/test_binary.png'
 emb_coord = pru.embedding(path)
 cv2.namedWindow("frame")
-cv2.createTrackbar("test", "frame", 85, 100, nothing)
+cv2.createTrackbar("test", "frame", 85, 100, pru.nothing)
 
 prev_test = 0
 while True:
