@@ -21,9 +21,11 @@ def ad_th(image, p1 = 115, p2 = 1):
 
 examples = ["sircali_buyuk_height1", "ince_kose_height"]
 
-path_strip = 'images/recognition/' + examples[1]
-path = path_strip + ".png"
-path_wr = path_strip + "_ADAPTIVE_THRESHOLD_" + ".png"
+# path_strip = 'images/recognition/' + examples[1]
+# path = path_strip + ".png"
+# path_wr = path_strip + "_ADAPTIVE_THRESHOLD_" + ".png"
+path = 'sourceimages/test_binary.png'
+path_wr = 'sourceimages/test_binary_ADAPTIVE_THRESHOLD.png'
 cv2.namedWindow("frame")
 cv2.createTrackbar("threshold param1", "frame", 115, 200, nothing)
 cv2.createTrackbar("threshold param2", "frame", 1, 5, nothing)

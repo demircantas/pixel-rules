@@ -137,8 +137,9 @@ def brick_draw(image, brick):
 # class brick:
 # reserved for the future when bricks will be defined as a class with methods and attributes
 
-examples = ["sircali_buyuk_height1", "ince_kose_height"]
-path = 'images/recognition/' + examples[1] + "_ADAPTIVE_THRESHOLD_" + ".png"
+# examples = ["sircali_buyuk_height1", "ince_kose_height"]
+# path = 'images/recognition/' + examples[1] + "_ADAPTIVE_THRESHOLD_" + ".png"
+path = 'sourceimages/test_binary.png'
 emb_coord = embedding(path)
 cv2.namedWindow("frame")
 cv2.createTrackbar("test", "frame", 85, 100, nothing)
