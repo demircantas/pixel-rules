@@ -5,7 +5,6 @@ import numpy as np
 import math
 import pickle
 
-
 def embedding(image):
     im = cv2.imread(image)
     # Select Region of Interest
@@ -15,14 +14,11 @@ def embedding(image):
 
     return corners
 
-
 def nothing(x):
     pass
 
-
 def distance(point_a, point_b):
     return math.sqrt((point_a[0] - point_b[0]) ** 2 + (point_a[1] - point_b[1]) ** 2)
-
 
 def corner_detect(image_path, embedding_coordinates, threshold):
     img_bgr = cv2.imread(image_path)  # image_path is a string variable
@@ -133,37 +129,32 @@ def brick_draw(image, brick):
         brickAttr = {"center_point": (int(x), int(y)), "area": area}
     return brickAttr
 
-
-# class brick:
-# reserved for the future when bricks will be defined as a class with methods and attributes
-
-# examples = ["sircali_buyuk_height1", "ince_kose_height"]
-# path = 'images/recognition/' + examples[1] + "_ADAPTIVE_THRESHOLD_" + ".png"
 path = 'sourceimages/test_binary.png'
 emb_coord = embedding(path)
 cv2.namedWindow("frame")
 cv2.createTrackbar("test", "frame", 85, 100, nothing)
 
+prev_test = 0
 while True:
     test = cv2.getTrackbarPos("test", "frame")
-    thr = float(test) * 0.01
-    frame = corner_detect(path, emb_coord, thr)[0][0]
 
-    points_corners = [corner_detect(path, emb_coord, thr)[x][1] for x in range(4)]
-    # print("corners " + str(len(points_corners)))
+    if test != prev_test:
+        thr = float(test) * 0.01
+        frame = corner_detect(path, emb_coord, thr)[0][0]
 
-    bricks = brick_lister(points_corners)
-    # print(type(bricks))
-    # print(type(bricks[0]))
-    # print(type(bricks[0][0]))
-    # print(type(bricks[0][0][0]))
-    brick_attr = []
-    for brick in bricks:
-        brick_attr.append(brick_draw(frame, brick))
+        points_corners = [corner_detect(path, emb_coord, thr)[x][1] for x in range(4)]
+        # print("corners " + str(len(points_corners)))
 
-    print(len(brick_attr))
-    for attr in brick_attr:
-        print(attr)
+        bricks = brick_lister(points_corners)
+        brick_attr = []
+        for brick in bricks:
+            brick_attr.append(brick_draw(frame, brick))
+
+        print(len(brick_attr))
+        for attr in brick_attr:
+            print(attr)
+
+        prev_test = test
 
     cv2.imshow("frame", frame)
 
@@ -173,6 +164,8 @@ while True:
     elif key == 32:  # spacebar to save image
         with open("pickle/bricks.pkl", "wb") as f:
             f.write(pickle.dumps(bricks, True))
+        
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 

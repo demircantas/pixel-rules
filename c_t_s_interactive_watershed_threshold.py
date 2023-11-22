@@ -1,6 +1,5 @@
 import cv2
 
-# im = cv2.imread('images/recognition/ince_kose_height' + "_ADAPTIVE_THRESHOLD_" + ".png")
 im = cv2.imread("sourceimages/test_binary.png")
 imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 ret, thresh = cv2.threshold(imgray, 127, 255, 0)
