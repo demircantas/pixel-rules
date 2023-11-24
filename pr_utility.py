@@ -3,6 +3,9 @@ import numpy as np
 import math
 import pickle
 
+def nothing(x):
+    pass
+
 def embedding(image):
     '''
     Takes an image, prompts user to draw a region of interest(ROI) 
@@ -14,26 +17,19 @@ def embedding(image):
 
     return corners
 
-def nothing(x):
-    pass
-
-def distance(point_a, point_b):
-    '''
-    Returns euclidean distance from tuple of two points
-    '''
-    return math.sqrt((point_a[0] - point_b[0]) ** 2 + (point_a[1] - point_b[1]) ** 2)
-
 def corner_detect(image_path, embedding_coordinates, threshold):
     img_bgr = cv2.imread(image_path)  # image_path is a string variable
     img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
     embedding = cv2.imread(image_path, 0)  # in cv2 images are stored as numpy ndarray
+
     (x, y, width, height) = embedding_coordinates  # list input taken from argument
     embedding = embedding[y:y + height, x:x + width]
     embeddings = [np.rot90(embedding.copy(), (i)) for i in range(4)]
 
     def template_matching(img_bgr, image_gray, embedding):
-        # w, h = embedding.shape[::-1]  # [::-1] is used to reverse the order of a list.
-        w, h = embedding.shape  # new version. I don't understand why the list is reversed for w, h
+        # Slicing: [start:stop:step]. If step is negative, the list is reversed.
+        # w, h = embedding.shape[::-1]
+        w, h = embedding.shape  # new version. I don't understand why the list used to be reversed for w, h
 
         # ndarray.shape function returns dimensions as a list(width, height, number of channels (in order)).
         res = cv2.matchTemplate(image_gray, embedding, cv2.TM_CCOEFF_NORMED)  # returns an image
@@ -58,6 +54,12 @@ def corner_detect(image_path, embedding_coordinates, threshold):
         return [img_bgr, points_filtered]
 
     return [template_matching(img_bgr, img_gray, embedding) for embedding in embeddings]
+
+def distance(point_a, point_b):
+    '''
+    Returns euclidean distance from tuple of two points
+    '''
+    return math.sqrt((point_a[0] - point_b[0]) ** 2 + (point_a[1] - point_b[1]) ** 2)
 
 def brick_lister(unsorted_corners):
     bricks = []  # list of lists with 4 items for brick corners
@@ -117,7 +119,6 @@ def brick_lister(unsorted_corners):
             break
     return bricks
 
-
 def brick_draw(image, brick):
     pts = np.array([corner for corner in brick])
     # old method
@@ -133,8 +134,10 @@ def brick_draw(image, brick):
         brickAttr = {"center_point": (int(x), int(y)), "area": area}
     return brickAttr
 
+# Main
 def find_emb(path):
     emb_coord = embedding(path)
+
     cv2.namedWindow("frame")
     cv2.createTrackbar("test", "frame", 85, 100, nothing)
 
@@ -173,6 +176,7 @@ def find_emb(path):
     cv2.destroyAllWindows()
     return brick_attr
 
+# Main
 def emb_val(path, brick_attr):
 
     im = cv2.imread(path)
